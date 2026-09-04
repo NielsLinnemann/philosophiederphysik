@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wochenendseminare | Philosophie der Physik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.seminare-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; margin-top: 56px; }
+.seminar-entry {
+  display: grid; grid-template-columns: 140px 1fr; gap: 0; align-items: stretch;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.2s;
+  text-decoration: none; background: var(--white);
+}
+.seminar-entry:hover { box-shadow: 0 12px 36px rgba(15,39,68,0.1); transform: translateY(-3px); }
+.seminar-poster {
+  width: 140px; height: auto; display: block; object-fit: contain;
+  align-self: stretch;
+}
+.seminar-poster-placeholder {
+  width: 200px; background: var(--navy);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.seminar-poster-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem; font-weight: 300; color: rgba(255,255,255,0.15);
+  writing-mode: vertical-rl; transform: rotate(180deg);
+}
+.seminar-content { padding: 28px 32px; display: flex; flex-direction: column; justify-content: space-between; }
+.seminar-num {
+  font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--blue); margin-bottom: 8px;
+}
+.seminar-entry-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem; font-weight: 500; color: var(--navy); line-height: 1.25; margin-bottom: 8px;
+}
+.seminar-entry-sub {
+  font-size: 0.85rem; color: var(--text-mid); line-height: 1.6; margin-bottom: 16px; flex: 1;
+}
+.seminar-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.seminar-location { font-size: 0.8rem; color: var(--text-light); display: flex; align-items: center; gap: 5px; }
+.seminar-location::before { content: '📍'; font-size: 0.7rem; }
+.seminar-date { font-size: 0.8rem; color: var(--text-light); }
+.seminar-arrow { margin-left: auto; color: var(--blue); font-size: 1rem; }
+@media (max-width: 900px) {
+  .seminare-grid { grid-template-columns: 1fr; }
+  .seminar-entry { grid-template-columns: 100px 1fr; }
+  .seminar-poster { width: 100px; height: auto; }
+  .seminar-poster-placeholder { width: 120px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="philosophiederphysik.html" class="nav-logo"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;flex-shrink:0;"><circle cx="16" cy="16" r="16" fill="#0f2744"/><path d="M11 8 Q7 8 7 13 Q7 18 11 19 L11 24" stroke="#4a9eff" stroke-width="2.1" fill="none" stroke-linecap="round"/><line x1="11" y1="8" x2="11" y2="24" stroke="#4a9eff" stroke-width="2.1" stroke-linecap="round"/><line x1="19" y1="11" x2="19" y2="24" stroke="white" stroke-width="2.1" stroke-linecap="round"/><path d="M19 11 Q25 11 25 15 Q25 19 19 19" stroke="white" stroke-width="2.1" fill="none" stroke-linecap="round"/></svg>Philosophie <span>&</span> Physik</a>
+  <ul class="nav-links">
+    <li><a href="aktuelles.html">Aktuelles</a></li>
+    <li><a href="was-ist.html">Was ist PhilPhys?</a></li>
+    <li><a href="materialien.html">Materialien</a></li>
+    <li><a href="quarterly-lectures.html">Vorlesungen</a></li>
+    <li><a href="people.html">Team</a></li>
+    <li><a href="wochenendseminare.html" class="active">WE-Seminare</a></li>
+    <li><a href="index.html#newsletter" class="nav-cta">Newsletter</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Seit 2018</div>
+    <h1>Wochenend<em>seminare</em></h1>
+    <p>Jährliche intensive Wochenendseminare für Studierende der Physik und Philosophie — mit einführenden Vorlesungen, vertiefenden Diskussionsgruppen und führenden Forscher*innen aus aller Welt.</p>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span class="current">Wochenendseminare</span>
+  </div>
+</div>
+
+<section style="background: var(--off-white);">
+  <div class="container">
+    <div class="section-label">Alle Ausgaben</div>
+    <h2 class="section-title">8 Seminare seit 2018</h2>
+    <p style="color:var(--text-mid); font-size:0.95rem; line-height:1.75; max-width:640px;">
+      Die Wochenendseminare richten sich insbesondere an Bachelor- und Masterstudierende der Physik und der Philosophie. Vorkenntnisse sind nicht erforderlich. Für Teilnehmer*innen werden Unterkunft und (anteilige) Reisekosten übernommen.
+    </p>
+
+    <div class="seminare-grid">
+
+      <a href="seminar-2025-tuebingen.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2025-2-small.JPG" alt="Poster 2025 Tübingen">
+        <div class="seminar-content">
+          <div class="seminar-num">8. Seminar</div>
+          <div class="seminar-entry-title">Physik und Information</div>
+          <div class="seminar-entry-sub">Mit Vorträgen von Saakshi Dulani (Johns Hopkins), Chris Timpson (Oxford), Javier Anta (Sevilla) und Benjamin Jantzen (Virginia Tech).</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Tübingen</span>
+            <span class="seminar-date">24.–26. Okt 2025</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2025-erlangen.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2025-small.png" alt="Poster 2025 GWP Erlangen">
+        <div class="seminar-content">
+          <div class="seminar-num">7. Seminar (GWP-Satellit)</div>
+          <div class="seminar-entry-title">Allgemeine Wissenschaftsphilosophie</div>
+          <div class="seminar-entry-sub">Satellitenworkshop bei der GWP.2025, mit Lina Jansson und Andreas Hüttemann.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Erlangen</span>
+            <span class="seminar-date">25.–26. März 2025</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2024-nijmegen.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2024-small.JPG" alt="Poster 2024 Nijmegen">
+        <div class="seminar-content">
+          <div class="seminar-num">6. Seminar</div>
+          <div class="seminar-entry-title">Fundamentality and Emergence</div>
+          <div class="seminar-entry-sub">Internationale Ausgabe in englischer Sprache. Mit Karen Crowther (Oslo), Klaas Landsman (Nijmegen), Vera Matarese (Perugia) u.a.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Nijmegen, NL</span>
+            <span class="seminar-date">6.–8. Sept 2024</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2023-siegen.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2023-small.JPG" alt="Poster 2023 Siegen">
+        <div class="seminar-content">
+          <div class="seminar-num">5. Seminar</div>
+          <div class="seminar-entry-title">Philosophie der Quantenmechanik II</div>
+          <div class="seminar-entry-sub">Zu den Themen Ununterscheidbarkeit, Quantenlogik und Interpretationen. Mit Veronika Baumann, Tomasz Bigaj und Sonja Smets.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Siegen</span>
+            <span class="seminar-date">13.–15. Juli 2023</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2022-berlin.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2022-small-3.png" alt="Poster 2022 Berlin">
+        <div class="seminar-content">
+          <div class="seminar-num">4. Seminar (GWP-Satellit)</div>
+          <div class="seminar-entry-title">Allgemeine Wissenschaftsphilosophie</div>
+          <div class="seminar-entry-sub">Integriert in die GWP-Konferenz. Mit Diskussionsgruppen zu Wissenschaft &amp; Werte, Realismus &amp; Modelle und Erklärung.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Berlin</span>
+            <span class="seminar-date">16.–18. Aug 2022</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2021-koeln.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2021-small.png" alt="Poster 2021 Köln">
+        <div class="seminar-content">
+          <div class="seminar-num">3. Seminar</div>
+          <div class="seminar-entry-title">Philosophie der Zeit</div>
+          <div class="seminar-entry-sub">Mit Natalja Deng (Yonsei), Andreas Hüttemann (Köln), Jenann Ismael (Columbia) und Lucy James (Bristol). Online.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Köln / Online</span>
+            <span class="seminar-date">10.–12. Dez 2021</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2020-bremen.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2020-small.png" alt="Poster 2020 Bremen">
+        <div class="seminar-content">
+          <div class="seminar-num">2. Seminar</div>
+          <div class="seminar-entry-title">Philosophie der Quantenmechanik</div>
+          <div class="seminar-entry-sub">Mit Vanessa Seifert (Bristol), Manfred Stöckler (Bremen), Marij van Strien (Wuppertal) und Stefan Wolf (Lugano). Online (Covid-19).</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Bremen / Online</span>
+            <span class="seminar-date">18.–20. Dez 2020</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="seminar-2018-bonn.html" class="seminar-entry">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2018-small.png" alt="Poster 2018 Bonn">
+        <div class="seminar-content">
+          <div class="seminar-num">1. Seminar</div>
+          <div class="seminar-entry-title">Philosophie der Raumzeit</div>
+          <div class="seminar-entry-sub">Das erste Wochenendseminar mit Andreas Bartels, Radin Dardashti, Dennis Lehmkuhl und Carina Prunkl. ~45 Teilnehmer*innen.</div>
+          <div class="seminar-meta">
+            <span class="seminar-location">Bonn</span>
+            <span class="seminar-date">7.–9. Dez 2018</span>
+            <span class="seminar-arrow">→</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="philosophiederphysik.html" class="footer-logo"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><circle cx="16" cy="16" r="16" fill="#1a3a5c"/><path d="M11 8 Q7 8 7 13 Q7 18 11 19 L11 24" stroke="#4a9eff" stroke-width="2.1" fill="none" stroke-linecap="round"/><line x1="11" y1="8" x2="11" y2="24" stroke="#4a9eff" stroke-width="2.1" stroke-linecap="round"/><line x1="19" y1="11" x2="19" y2="24" stroke="white" stroke-width="2.1" stroke-linecap="round"/><path d="M19 11 Q25 11 25 15 Q25 19 19 19" stroke="white" stroke-width="2.1" fill="none" stroke-linecap="round"/></svg>Philosophie <span>&</span> Physik</a>
+        <p class="footer-tagline">Eine deutschsprachige Community für die interdisziplinäre Grenzwissenschaft zwischen Philosophie und Physik.</p>
+      </div>
+      <div class="footer-col"><h5>Navigation</h5><ul>
+        <li><a href="aktuelles.html">Aktuelles</a></li>
+        <li><a href="was-ist.html">Was ist PhilPhys?</a></li>
+        <li><a href="materialien.html">Materialien</a></li>
+    <li><a href="quarterly-lectures.html">Vorlesungen</a></li>
+        <li><a href="people.html">Team</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>WE-Seminare</h5><ul>
+        <li><a href="seminar-2025-tuebingen.html">2025 Tübingen</a></li>
+        <li><a href="seminar-2024-nijmegen.html">2024 Nijmegen</a></li>
+        <li><a href="seminar-2023-siegen.html">2023 Siegen</a></li>
+        <li><a href="seminar-2022-berlin.html">2022 Berlin</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Kontakt</h5><ul>
+        <li><a href="mailto:seminar@philosophiederphysik.de">Seminar</a></li>
+        <li><a href="mailto:newsletter@philosophiederphysik.de">Newsletter</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© philosophiederphysik.de 2018–2025</span>
+      <a href="impressum.html" class="footer-impressum">Impressum</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

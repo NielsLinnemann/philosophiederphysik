@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quarterly Lectures | Philosophie der Physik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<style>
+.lang-toggle {
+  display: flex; gap: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 4px;
+  margin-top: 28px;
+  display: inline-flex;
+}
+.lang-btn {
+  padding: 8px 20px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  color: rgba(255,255,255,0.5);
+  font-family: 'DM Sans', sans-serif;
+}
+.lang-btn.active {
+  background: var(--white);
+  color: var(--navy);
+}
+[data-lang="de"] .en-only { display: none; }
+[data-lang="en"] .de-only { display: none; }
+
+.lectures-section { background: var(--off-white); }
+.year-block { margin-bottom: 64px; }
+.year-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 300;
+  color: var(--ice-dark);
+  margin-bottom: 8px;
+  line-height: 1;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 16px;
+}
+.lecture-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.lecture-card:hover { box-shadow: 0 8px 28px rgba(15,39,68,0.08); }
+.lecture-card.upcoming { border-color: var(--blue); }
+.lecture-header {
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 24px;
+  align-items: start;
+  cursor: pointer;
+}
+.lecture-num-big {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 300;
+  color: var(--ice-dark);
+  line-height: 1;
+}
+.lecture-card.upcoming .lecture-num-big { color: var(--blue); }
+.lecture-meta {}
+.lecture-speaker {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--navy);
+  margin-bottom: 4px;
+}
+.lecture-affil {
+  font-size: 0.85rem;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+.lecture-title-main {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--text-mid);
+  line-height: 1.4;
+}
+.lecture-date-col {
+  text-align: right;
+  white-space: nowrap;
+}
+.lecture-date-str {
+  font-size: 0.82rem;
+  color: var(--text-mid);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+.lecture-time-str {
+  font-size: 0.75rem;
+  color: var(--text-light);
+}
+.upcoming-pill {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+  background: var(--ice);
+  padding: 4px 10px;
+  border-radius: 3px;
+}
+.lecture-expand {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s ease, padding 0.3s;
+}
+.lecture-expand.open { max-height: 2000px; }
+.lecture-body {
+  padding: 0 32px 28px;
+  border-top: 1px solid var(--border);
+  padding-top: 24px;
+}
+.lecture-body h4 {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  margin-top: 20px;
+}
+.lecture-body h4:first-child { margin-top: 0; }
+.lecture-body p {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: var(--text-mid);
+  margin-bottom: 12px;
+}
+.lecture-body a {
+  color: var(--blue);
+  text-decoration: none;
+  border-bottom: 1px solid var(--ice-dark);
+}
+.lecture-body a:hover { color: var(--blue-light); }
+.readings-list { list-style: none; }
+.readings-list li {
+  font-size: 0.875rem;
+  color: var(--text-mid);
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.5;
+}
+.readings-list li:last-child { border-bottom: none; }
+.expand-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--grey-soft);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  color: var(--text-light);
+  transition: transform 0.3s, background 0.2s;
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+.lecture-card.open .expand-arrow {
+  transform: rotate(180deg);
+  background: var(--ice);
+  color: var(--blue);
+}
+.zoom-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ice);
+  color: var(--blue);
+  padding: 10px 18px;
+  border-radius: 4px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 16px;
+  transition: background 0.2s;
+}
+.zoom-link:hover { background: var(--ice-dark); }
+.lecture-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.btn-recording {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: #c0392b; color: #ffffff;
+  padding: 9px 16px; border-radius: 4px;
+  font-size: 0.78rem; font-weight: 600; text-decoration: none;
+  border: none;
+  transition: background 0.2s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+.btn-recording:hover { background: #e74c3c; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(192,57,43,0.35); }
+.btn-recording svg { flex-shrink: 0; }
+.btn-slides {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--ice); color: var(--blue);
+  padding: 9px 16px; border-radius: 4px;
+  font-size: 0.78rem; font-weight: 500; text-decoration: none;
+  border: 1px solid var(--ice-dark);
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-slides:hover { background: var(--ice-dark); transform: translateY(-1px); }
+.description-section { background: var(--white); }
+.desc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.desc-text p { font-size: 0.95rem; line-height: 1.8; color: var(--text-mid); margin-bottom: 16px; }
+.desc-box {
+  background: var(--navy);
+  border-radius: 12px;
+  padding: 40px 36px;
+  position: relative;
+  overflow: hidden;
+}
+.desc-box::before { content: ''; position: absolute; width: 300px; height: 300px; border: 1px solid rgba(255,255,255,0.06); border-radius: 50%; right: -80px; bottom: -80px; }
+.desc-box p {
+  font-size: 0.9rem;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 12px;
+  position: relative; z-index: 1;
+}
+.desc-box .label {
+  font-size: 0.7rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+  display: block;
+}
+@media (max-width: 900px) {
+  .lecture-header { grid-template-columns: 48px 1fr; gap: 16px; }
+  .lecture-date-col { display: none; }
+  .desc-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body data-lang="de">
+
+<nav>
+  <a href="philosophiederphysik.html" class="nav-logo"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;flex-shrink:0;"><circle cx="16" cy="16" r="16" fill="#0f2744"/><path d="M11 8 Q7 8 7 13 Q7 18 11 19 L11 24" stroke="#4a9eff" stroke-width="2.1" fill="none" stroke-linecap="round"/><line x1="11" y1="8" x2="11" y2="24" stroke="#4a9eff" stroke-width="2.1" stroke-linecap="round"/><line x1="19" y1="11" x2="19" y2="24" stroke="white" stroke-width="2.1" stroke-linecap="round"/><path d="M19 11 Q25 11 25 15 Q25 19 19 19" stroke="white" stroke-width="2.1" fill="none" stroke-linecap="round"/></svg>Philosophie <span>&</span> Physik</a>
+  <ul class="nav-links">
+    <li><a href="aktuelles.html">Aktuelles</a></li>
+    <li><a href="was-ist.html">Was ist PhilPhys?</a></li>
+    <li><a href="materialien.html">Materialien</a></li>
+    <li><a href="quarterly-lectures.html" class="active">Vorlesungen</a></li>
+    <li><a href="people.html">Team</a></li>
+    <li><a href="wochenendseminare.html">WE-Seminare</a></li>
+    <li><a href="index.html#newsletter" class="nav-cta">Newsletter</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="page-eyebrow">Seit 2022</div>
+    <h1>Quarterly Lectures on<br><em>Philosophy of Science</em></h1>
+    <p class="de-only">Renommierte Philosoph*innen und Wissenschaftler*innen präsentieren ihre Forschung für Studierende — 60 Minuten Vortrag, 30 Minuten Diskussion, kostenlos via Zoom.</p>
+    <p class="en-only">Renowned philosophers and scientists present their research to students — 60-minute lecture followed by a 30-minute discussion, free via Zoom.</p>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('de')">DE</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="breadcrumb">
+  <div class="breadcrumb-inner">
+    <a href="index.html">Home</a>
+    <span>›</span>
+    <span class="current de-only">Quartalsvorlesungen</span>
+    <span class="current en-only">Quarterly Lectures</span>
+  </div>
+</div>
+
+<!-- DESCRIPTION -->
+<section class="description-section">
+  <div class="container">
+    <div class="desc-grid">
+      <div class="desc-text">
+        <div class="section-label de-only">Über die Reihe</div>
+        <div class="section-label en-only">About the series</div>
+        <h2 class="section-title de-only">Was sind die Quarterly Lectures?</h2>
+        <h2 class="section-title en-only">What are the Quarterly Lectures?</h2>
+        <p class="de-only">Mit den Quarterly Lectures on Philosophy of Science haben wir 2022 eine neue Vortragsreihe begonnen, für die wir bekannte Philosoph*innen und Wissenschaftler*innen für einen 60-Minuten Vortrag mit anschließender Diskussion einladen, ihre Forschung für Bachelor- und Masterstudierende vorzustellen. Die Vorträge werden auf Englisch gehalten.</p>
+        <p class="en-only">In 2022, we launched the Quarterly Lectures on Philosophy of Science — a new lecture series in which we invite well-known philosophers and scientists to present their research to bachelor's and master's students through a 60-minute lecture followed by a 30-minute discussion. The lectures are held in English.</p>
+        <p class="de-only">Alle Interessierten sind herzlich eingeladen. Der Zoom-Link wird über diese Seite veröffentlicht, auch etwaige Vorbereitungsmaterialien werden hier zugänglich gemacht. Aufzeichnungen sind ebenfalls verfügbar.</p>
+        <p class="en-only">All interested parties are cordially invited. The Zoom link will be published on this page, and preparatory materials will also be made available here. Recordings are available as well.</p>
+        <p class="de-only">Vorschläge für Redner*innen sind willkommen — schreibt uns gern an <a href="mailto:seminar@philosophiederphysik.de">seminar@philosophiederphysik.de</a>.</p>
+        <p class="en-only">Speaker suggestions are welcome — feel free to write to <a href="mailto:seminar@philosophiederphysik.de">seminar@philosophiederphysik.de</a>.</p>
+      </div>
+      <div class="desc-box">
+        <span class="label de-only">Praktische Infos</span>
+        <span class="label en-only">Practical Info</span>
+        <p class="de-only"><strong style="color:var(--white)">Format:</strong> 60 min Vortrag + 30 min Diskussion, auf Englisch.</p>
+        <p class="en-only"><strong style="color:var(--white)">Format:</strong> 60-min lecture + 30-min discussion, in English.</p>
+        <p class="de-only"><strong style="color:var(--white)">Plattform:</strong> Zoom (Link vor jeder Vorlesung auf dieser Seite).</p>
+        <p class="en-only"><strong style="color:var(--white)">Platform:</strong> Zoom (link published on this page before each lecture).</p>
+        <p class="de-only"><strong style="color:var(--white)">Kosten:</strong> Kostenlos. Keine Anmeldung nötig.</p>
+        <p class="en-only"><strong style="color:var(--white)">Cost:</strong> Free. No registration required.</p>
+        <p class="de-only"><strong style="color:var(--white)">Newsletter:</strong> Um Ankündigungen per E-Mail zu erhalten, abonniert unseren <a href="mailto:newsletter@philosophiederphysik.de" style="color:var(--accent);border-color:rgba(74,158,255,0.3);">Newsletter</a>.</p>
+        <p class="en-only"><strong style="color:var(--white)">Newsletter:</strong> To receive announcements by email, subscribe to our <a href="mailto:newsletter@philosophiederphysik.de" style="color:var(--accent);border-color:rgba(74,158,255,0.3);">newsletter</a>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LECTURE LIST -->
+<section class="lectures-section">
+  <div class="container">
+
+    <!-- 2026 -->
+    <div class="year-block">
+      <div class="year-heading">2026</div>
+      <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:24px; de-only">Organisiert von Karla Weingarten (Nijmegen), Oxana Shaya (Hannover), Maren Bräutigam (Köln), Annica Vieser (Genf), Niels Linnemann (Genf) und Kian Salimkhani (Nijmegen).</p>
+
+      <!-- 19 -->
+      <div class="lecture-card upcoming" id="lec19">
+        <div class="lecture-header" onclick="toggleLecture('lec19')">
+          <div class="lecture-num-big">18</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Katherine Brading</div>
+            <div class="lecture-affil">Duke University</div>
+            <div class="lecture-title-main de-only">Thema folgt</div>
+            <div class="lecture-title-main en-only">Topic tba</div>
+            <span class="upcoming-pill de-only">Demnächst</span>
+            <span class="upcoming-pill en-only">Upcoming</span>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">29. Oktober 2026</div>
+            <div class="lecture-time-str">16:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec19-body">
+          <div class="lecture-body">
+            <p class="de-only">Details und Zoom-Link werden rechtzeitig vor der Veranstaltung hier veröffentlicht.</p>
+            <p class="en-only">Details and the Zoom link will be published here ahead of the event.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 18 -->
+      <div class="lecture-card" id="lec18">
+        <div class="lecture-header" onclick="toggleLecture('lec18')">
+          <div class="lecture-num-big">17</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">John D. Norton</div>
+            <div class="lecture-affil">University of Pittsburgh</div>
+            <div class="lecture-title-main">Small-e Empiricism</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">4. Juni 2026</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec18-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Small-e empiricism is a version of empiricism adapted to modern science. It changes traditional empiricism in two ways: First, traditional Big-E Empiricism has two components: we can only learn of the world through experience and ALL we learn is merely the content of that experience. Small-e empiricism retains the first component but discards the second, which is dismissed as an unsustainable form of inductive skepticism. Second, since instruments have replaced human sense organs as the principal way that modern science engages with the world, the notion of experience in small-e empiricism is not restricted to the excitations of human sense organs. It includes any physical process that connects continuously to the systems of interest.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>Part II (esp. Ch. 12) of <em>Small-e empiricism</em> (Draft available <a href="https://sites.pitt.edu/~jdnorton/papers/small-e_empiricism/small-e_empiricism.html">here</a>)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2025 -->
+    <div class="year-block">
+      <div class="year-heading">2025</div>
+      <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:24px;">Organised by Niels Linnemann (Geneva), Kian Salimkhani (Nijmegen), Karla Weingarten (Nijmegen), Oxana Shaya (Hanover), Maren Bräutigam (Cologne), and Annica Vieser (Geneva).</p>
+
+      <!-- 16 -->
+      <div class="lecture-card" id="lec16">
+        <div class="lecture-header" onclick="toggleLecture('lec16')">
+          <div class="lecture-num-big">16</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Olimpia Lombardi</div>
+            <div class="lecture-affil">Universidad de Buenos Aires</div>
+            <div class="lecture-title-main">Modal-Hamiltonian Interpretation of quantum mechanics</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">12. Dez 2025</div>
+            <div class="lecture-time-str">15:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec16-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>The Modal-Hamiltonian Interpretation (MHI) of quantum mechanics belongs to the modal family: it is a realist, non-collapse interpretation, according to which the quantum state describes the possible properties of a system but not its actual properties. In particular, the Hamiltonian of the closed quantum system plays a decisive role in the rule that selects the definite-valued observables of the system.</p>
+            <p>In this presentation the speaker focuses on three points: (a) The MHI is effective in solving the measurement problem, both in its ideal and its non-ideal versions. (b) The MHI can be reformulated under an explicitly Galilean-invariant form in terms of the Casimir operators of the Galilean group. (c) According to the MHI, quantum systems are not individuals, but bundles of the type-properties represented by the observables of the system.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li><a href="https://www.philosophiederphysik.de/user/pages/04.quarterly-lectures/Lombardi%20-%20Not%20even%20objects.pdf">Not Individuals, Nor Even Objects</a></li>
+              <li><a href="https://www.philosophiederphysik.de/user/pages/04.quarterly-lectures/Lombardi%20-%20MHI.pdf" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span class="de-only">Folien / Material</span><span class="en-only">Slides / Material</span></a></li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+              <a href="https://www.philosophiederphysik.de/user/pages/04.quarterly-lectures/Lombardi%20-%20MHI.pdf" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg><span class="de-only">Folien / Material</span><span class="en-only">Slides / Material</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 15 -->
+      <div class="lecture-card" id="lec15">
+        <div class="lecture-header" onclick="toggleLecture('lec15')">
+          <div class="lecture-num-big">15</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Arnon Levy, Tarja Knuuttila &amp; Axel Gelfert</div>
+            <div class="lecture-affil">Hebrew U Jerusalem / U Vienna / TU Berlin</div>
+            <div class="lecture-title-main">Talk and panel discussion on models and values</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">8. Okt 2025</div>
+            <div class="lecture-time-str">15:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec15-body">
+          <div class="lecture-body">
+            <h4>Arnon Levy — Covid-19 Modeling and the Science-Policy Nexus</h4>
+            <p>The appropriate role of scientists in shaping policy is both a philosophically interesting issue and one that has broader socio-political significance. This was brought out dramatically during the Covid-19 crisis. Of particular note was the role of infectious disease modelers, and in particular a group in Imperial College London. My overarching claim is that responsibility for both the process and outcomes of policy-making should remain firmly on the shoulders of political leaders and government officials.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>Birch (2021); Winsberg and Harvard (2024); Streicher, Broadbent, and Hellwell (2025)</li>
+              <li>Grüne-Yanoff (2021); Gelfert, John, and Frisch (2025)</li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/z5eUVtWn0xajIjM" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Levy: Slides</a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/TLAPKgWVQJZXWNW" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Knuuttila: Commentary</a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/JCyctfSrK2TbWOW" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Gelfert: Commentary</a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/cWRcOySkS52BVNH" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Levy: Response</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 14 -->
+      <div class="lecture-card" id="lec14">
+        <div class="lecture-header" onclick="toggleLecture('lec14')">
+          <div class="lecture-num-big">14</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Jill North</div>
+            <div class="lecture-affil">Rutgers University</div>
+            <div class="lecture-title-main">Losing an i: On the Naturalness of Complex Numbers for Quantum Mechanics</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">4. Juni 2025</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec14-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>It is often said by physicists that whereas in classical physics complex numbers are a useful but ultimately dispensable mathematical tool, in quantum mechanics they become necessary or essential to formulating the theory. In this talk, the speaker argues that a remarkably illuminating reason for the special naturalness of complex numbers flows from distinctively quantum phenomena involving spin.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>D. Albert, <em>Quantum Mechanics and Experience</em> (through page 43)</li>
+              <li>J. Barrett, <em>Conceptual Foundations of Quantum Mechanics</em>, chs. 2–4</li>
+              <li>J. Ismael, <em>Quantum Mechanics</em></li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/tqhvjcq2RCXO7ca" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 13 -->
+      <div class="lecture-card" id="lec13">
+        <div class="lecture-header" onclick="toggleLecture('lec13')">
+          <div class="lecture-num-big">13</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Catherine Elgin</div>
+            <div class="lecture-affil">Harvard University</div>
+            <div class="lecture-title-main">Models as Felicitous Falsehoods</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">11. Apr 2025</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec13-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Models enable an epistemic agent to understand reality in ways that she could not do if she restricted herself to the unvarnished truth. They simplify, streamline, and distort. The regularities a model reveals are real and informative. But many of them show up only under idealizing assumptions. Models facilitate and channel inferences. The construction and use of models thus underscores the way that epistemic agents advance understanding by contriving representations that foster their epistemic ends.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>C. Elgin, <em>True Enough</em>, Chapter 12</li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/cofcvPt4pGNAVVZ" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2024 -->
+    <div class="year-block">
+      <div class="year-heading">2024</div>
+
+      <!-- 12 -->
+      <div class="lecture-card" id="lec12">
+        <div class="lecture-header" onclick="toggleLecture('lec12')">
+          <div class="lecture-num-big">12</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Angela Potochnik</div>
+            <div class="lecture-affil">University of Cincinnati</div>
+            <div class="lecture-title-main">How False Assumptions Contribute to Scientific Understanding</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">6. Dez 2024</div>
+            <div class="lecture-time-str">16:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec12-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Factivism about scientific explanation holds that the explanations generated in science must be true to succeed. Many of our best scientific explanations incorporate idealizations — false assumptions. In this talk, the speaker proposes reframing this debate away from whether it is possible to maintain factivism come what may, to instead recognize the philosophical fruitfulness of how departures from the truth facilitate explanation and, thus, understanding.</p>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/kEov4KLSq41R1Zr" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 11 -->
+      <div class="lecture-card" id="lec11">
+        <div class="lecture-header" onclick="toggleLecture('lec11')">
+          <div class="lecture-num-big">11</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Roman Frigg</div>
+            <div class="lecture-affil">London School of Economics</div>
+            <div class="lecture-title-main">Models and Representation</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">29. Nov 2024</div>
+            <div class="lecture-time-str">16:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec11-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Models matter. This lecture focuses on representational models — models that stand for a selected part or aspect of the world. The lecture introduces the DEKI account of representation (Denotation, Exemplification, Keying-up, Imputation), which traces the origins to Goodman and Elgin's notion of "representation as."</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>R. Frigg &amp; J. Nguyen, <em>Models and Theories: A Philosophical Inquiry</em> (OA)</li>
+              <li>R. Frigg &amp; J. Nguyen, <em>Modelling Nature: An Opinionated Introduction to Scientific Representation</em></li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/MwJ6DRP4UvbmDOk" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10 -->
+      <div class="lecture-card" id="lec10">
+        <div class="lecture-header" onclick="toggleLecture('lec10')">
+          <div class="lecture-num-big">10</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Michela Massimi</div>
+            <div class="lecture-affil">University of Edinburgh</div>
+            <div class="lecture-title-main">Perspectival Realism — An Introduction</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">10. Juni 2024</div>
+            <div class="lecture-time-str">14:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec10-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>An overview of the philosophical view called Perspectival Realism as articulated in Massimi (2022, OUP). The talk presents the epistemological approach to science that underpins the view with the question of how reliable scientific knowledge is produced, and elucidates the realist position with a focus on a phenomena-first ontology.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>M. Massimi, <em>Perspectival Realism</em> (OUP 2022)</li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9 -->
+      <div class="lecture-card" id="lec9">
+        <div class="lecture-header" onclick="toggleLecture('lec9')">
+          <div class="lecture-num-big">9</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Alastair Wilson</div>
+            <div class="lecture-affil">University of Leeds</div>
+            <div class="lecture-title-main">Four Grades of Modal Naturalism</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">19. Apr 2024</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec9-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>How, if at all, can scientific progress improve our view of the modal facts? According to rationalist approaches to modal epistemology, science has no substantive role. According to modal naturalist approaches, science provides evidence about the structure of the underlying modal space. This lecture distinguishes four versions of modal naturalism, with science playing an increasingly robust evidential role.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>A. Wilson, <em>The Nature of Contingency: Quantum Physics as Modal Realism</em></li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/h0WSX4CARxQX9Vq" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2023 -->
+    <div class="year-block">
+      <div class="year-heading">2023</div>
+
+      <div class="lecture-card" id="lec8">
+        <div class="lecture-header" onclick="toggleLecture('lec8')">
+          <div class="lecture-num-big">8</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Nina Emery</div>
+            <div class="lecture-affil">Mount Holyoke College / UMass Amherst</div>
+            <div class="lecture-title-main">Methodological Naturalism and Context Dependence</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">15. Dez 2023</div>
+            <div class="lecture-time-str">15:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec8-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Methodological naturalism is the view that metaphysicians ought to follow as much of the methodology of science as possible. This lecture presents an argument for methodological naturalism and explores some interesting consequences, then turns to what appears to be the most significant challenge: the context-dependence of scientific methodology.</p>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/Hyd5fIclEgyetjd" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec7">
+        <div class="lecture-header" onclick="toggleLecture('lec7')">
+          <div class="lecture-num-big">7</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Lina Jansson</div>
+            <div class="lecture-affil">University of Nottingham</div>
+            <div class="lecture-title-main">Symmetries and Conservation Laws</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">17. Nov 2023</div>
+            <div class="lecture-time-str">15:30 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec7-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Symmetries are sometimes taken to explain conservation laws rather than vice versa. However, it is not easy to see how to justify this direction of explanation. This talk presents an epistemic account of explanation and the conditions that would have to be fulfilled in order for symmetries to explain conservation laws (but not vice versa).</p>
+
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec6">
+        <div class="lecture-header" onclick="toggleLecture('lec6')">
+          <div class="lecture-num-big">6</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Hajnal Andréka &amp; István Németi, Michael Cuffaro, Lenka Zdeborová</div>
+            <div class="lecture-affil">Hungarian Academy of Sciences / MCMP Munich / EPF Lausanne</div>
+            <div class="lecture-title-main">Panel: Limitations to Unifying Computation and Physics</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">23. Juni 2023</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec6-body">
+          <div class="lecture-body">
+            <h4>Talks</h4>
+            <p><strong>1.</strong> Andréka &amp; Németi: <em>Relativistic computation</em><br>
+            <strong>2.</strong> Cuffaro: <em>Quantum Computing's Impact on the Foundations of Computational Complexity Theory</em><br>
+            <strong>3.</strong> Zdeborová: <em>Analysis of computational hardness via phase transitions</em><br>
+            <strong>4.</strong> Panel discussion</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li><a href="https://www.cambridge.org/core/elements/abs/physics-and-computation/279955B3216916918681EB1881CDD94E">Duwell (2021): Physics and Computation</a></li>
+            </ul>
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/jYrTWqkSIX5cQ9x" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Andréka &amp; Németi: Slides</a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/NA1T189cbfp8yl8" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Cuffaro: Slides</a>
+              <a href="https://surfdrive.surf.nl/files/index.php/s/IjLBHMzlgoV97i6" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Zdeborová: Slides</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec5">
+        <div class="lecture-header" onclick="toggleLecture('lec5')">
+          <div class="lecture-num-big">5</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Jacob Stegenga</div>
+            <div class="lecture-affil">University of Cambridge</div>
+            <div class="lecture-title-main">Fast Science</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">12. Mai 2023</div>
+            <div class="lecture-time-str">17:30 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec5-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Scientists violate principles and practices of routine science to quickly develop interventions against catastrophic threats. This lecture defends two principles to assess fast science: it should satisfy as much as possible the reliability-enhancing features of routine science, and should not depend on the same problematic assumptions as the science estimating the magnitude of the threat.</p>
+
+            <div class="lecture-links">
+              <a href="#" class="btn-recording" style="opacity:0.6;pointer-events:none;"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2022 -->
+    <div class="year-block">
+      <div class="year-heading">2022</div>
+
+      <div class="lecture-card" id="lec4">
+        <div class="lecture-header" onclick="toggleLecture('lec4')">
+          <div class="lecture-num-big">4</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Kerry McKenzie</div>
+            <div class="lecture-affil">UC San Diego</div>
+            <div class="lecture-title-main">Physics, Metaphysics, and the Problem of Progress</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">9. Dez 2022</div>
+            <div class="lecture-time-str">19:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec4-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Metaphysics is often held to be continuous with science. And in many respects it is: it has similar aims and may even employ a similar methodology. However, it is arguably very different in one crucial respect: while science clearly makes progress, it is very much less clear that metaphysics does. This talk explains why and responds to objections.</p>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/f2OFXXqx7gJ7u6h" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+              <a href="https://www.philosophiederphysik.de/quarterly-lectures/04_McKenzie_Slides.pdf" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Slides PDF</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec3">
+        <div class="lecture-header" onclick="toggleLecture('lec3')">
+          <div class="lecture-num-big">3</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Anjan Chakravartty</div>
+            <div class="lecture-affil">University of Miami</div>
+            <div class="lecture-title-main">On the Relationship between Scientific Realism and Scientific Metaphysics</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">19. Aug 2022</div>
+            <div class="lecture-time-str">16:00 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec3-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>Debates about scientific realism and debates about scientific or naturalized metaphysics are generally conducted in isolation from one another. As it happens, these two debates are in fact interwoven, because different approaches to scientific realism reflect different approaches to naturalized metaphysics, and antirealist arguments in the former domain have correlates in the latter.</p>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/5YPx8j8YoS7vyuD" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec2">
+        <div class="lecture-header" onclick="toggleLecture('lec2')">
+          <div class="lecture-num-big">2</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Emily Adlam</div>
+            <div class="lecture-affil">University of Western Ontario</div>
+            <div class="lecture-title-main">Operational Theories as Structural Realism</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">23. Juni 2022</div>
+            <div class="lecture-time-str">18:15 CEST</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec2-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>This talk introduces the operational theories approach to research in quantum foundations. The space of operational theories is analogous to the space of possible worlds employed in the possible world semantics for modal logic, so research of this sort can be understood as probing modal structure. Thus operational axiomatisations of quantum mechanics may be interpreted as a novel form of structural realism.</p>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/hNxEHHpnjV0SpqQ" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lecture-card" id="lec1">
+        <div class="lecture-header" onclick="toggleLecture('lec1')">
+          <div class="lecture-num-big">1</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Bas van Fraassen</div>
+            <div class="lecture-affil">San Francisco State University / Princeton University</div>
+            <div class="lecture-title-main">Epistemological implications of Bell's inequality</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">21. März 2022</div>
+            <div class="lecture-time-str">19:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec1-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>A quick rehearsal of the schematic form of the Aspect experiment to test Bell's Inequalities. Then an explanation of how those inequalities can be deduced if we assume Reichenbach's common cause principle, and next, if we assume counterfactual definiteness (made precise in terms of conditionals). Finally, an advocacy for an empiricist stance toward modality.</p>
+            <h4 class="de-only">Vorbereitungslektüre</h4>
+            <h4 class="en-only">Background Reading</h4>
+            <ul class="readings-list">
+              <li>Mermin (1981)</li>
+            </ul>
+
+            <div class="lecture-links">
+              <a href="https://surfdrive.surf.nl/files/index.php/s/zdlCyNDK66QGy4e" class="btn-recording" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="5 3 19 12 5 21 5 3"/></svg><span class="de-only">Video</span><span class="en-only">Video</span></a>
+              <a href="https://www.dropbox.com/s/8wrmar1x8p23ouu/Quarterly%20Lecture%20Phil%20Sci%20Germany.pdf?dl=0" class="btn-slides" target="_blank"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>Script (PDF)</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="newsletter-strip">
+  <div class="newsletter-strip-inner">
+    <div>
+      <h3 class="de-only">Keine Vorlesung <em>verpassen</em></h3>
+      <h3 class="en-only">Never miss a <em>lecture</em></h3>
+      <p style="color:rgba(255,255,255,0.5); font-size:0.875rem; margin-top:10px;" class="de-only">Newsletter abonnieren für Zoom-Links und Ankündigungen.</p>
+      <p style="color:rgba(255,255,255,0.5); font-size:0.875rem; margin-top:10px;" class="en-only">Subscribe to the newsletter for Zoom links and announcements.</p>
+    </div>
+    <div class="email-row">
+      <input type="email" placeholder="deine@email.de" id="nl-email">
+      <button onclick="nlSubmit()">
+        <span class="de-only">Abonnieren</span>
+        <span class="en-only">Subscribe</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a href="philosophiederphysik.html" class="footer-logo"><svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;flex-shrink:0;"><circle cx="16" cy="16" r="16" fill="#1a3a5c"/><path d="M11 8 Q7 8 7 13 Q7 18 11 19 L11 24" stroke="#4a9eff" stroke-width="2.1" fill="none" stroke-linecap="round"/><line x1="11" y1="8" x2="11" y2="24" stroke="#4a9eff" stroke-width="2.1" stroke-linecap="round"/><line x1="19" y1="11" x2="19" y2="24" stroke="white" stroke-width="2.1" stroke-linecap="round"/><path d="M19 11 Q25 11 25 15 Q25 19 19 19" stroke="white" stroke-width="2.1" fill="none" stroke-linecap="round"/></svg>Philosophie <span>&</span> Physik</a>
+        <p class="footer-tagline">Eine deutschsprachige Community für die interdisziplinäre Grenzwissenschaft zwischen Philosophie und Physik.</p>
+      </div>
+      <div class="footer-col"><h5>Navigation</h5><ul>
+        <li><a href="aktuelles.html">Aktuelles</a></li>
+        <li><a href="was-ist.html">Was ist PhilPhys?</a></li>
+        <li><a href="materialien.html">Materialien</a></li>
+        <li><a href="materialien.html">Materialien</a></li>
+    <li><a href="quarterly-lectures.html">Vorlesungen</a></li>
+        <li><a href="people.html">Team</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>WE-Seminare</h5><ul>
+        <li><a href="seminar-2025-tuebingen.html">2025 Tübingen</a></li>
+        <li><a href="seminar-2024-nijmegen.html">2024 Nijmegen</a></li>
+        <li><a href="seminar-2023-siegen.html">2023 Siegen</a></li>
+        <li><a href="wochenendseminare.html">Alle Seminare</a></li>
+      </ul></div>
+      <div class="footer-col"><h5>Kontakt</h5><ul>
+        <li><a href="mailto:newsletter@philosophiederphysik.de">Newsletter</a></li>
+        <li><a href="mailto:seminar@philosophiederphysik.de">WE-Seminare</a></li>
+        <li><a href="impressum.html">Impressum</a></li>
+      </ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© philosophiederphysik.de 2018–2025</span>
+      <a href="impressum.html" class="footer-impressum">Impressum</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function setLang(lang) {
+  document.body.dataset.lang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+}
+
+function toggleLecture(id) {
+  const card = document.getElementById(id);
+  const body = document.getElementById(id + '-body');
+  card.classList.toggle('open');
+  body.classList.toggle('open');
+}
+
+function nlSubmit() {
+  const email = document.getElementById('nl-email').value.trim();
+  if (email && email.includes('@')) {
+    window.location.href = 'mailto:newsletter@philosophiederphysik.de?subject=Newsletter%20Anmeldung&body=' + encodeURIComponent(email);
+  }
+}
+</script>
+</body>
+</html>
