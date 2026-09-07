@@ -137,8 +137,21 @@ section { padding: 80px 48px; }
 .prose a:hover { color: var(--blue-light); border-color: var(--blue-light); }
 
 /* BUTTONS */
-.btn-primary { display: inline-block; background: var(--blue); color: var(--white); padding: 13px 28px; border-radius: 4px; text-decoration: none; font-size: 0.875rem; font-weight: 400; letter-spacing: 0.03em; transition: background var(--transition), transform var(--transition), box-shadow var(--transition); }
-.btn-primary:hover { background: var(--blue-light); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,168,0.3); }
+.btn-primary,
+.btn-primary:visited {
+  display: inline-block; background: var(--blue); color: var(--white); padding: 13px 28px; border-radius: 4px; text-decoration: none; font-size: 0.875rem; font-weight: 400; letter-spacing: 0.03em; transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+}
+.btn-primary:hover,
+.btn-primary:focus-visible {
+  background: var(--blue-light); color: var(--white); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,168,0.3);
+}
+.prose a.btn-primary,
+.prose a.btn-primary:visited,
+.prose a.btn-primary:hover,
+.prose a.btn-primary:focus-visible {
+  color: var(--white);
+  border-bottom: 0;
+}
 .btn-ghost { display: inline-flex; align-items: center; gap: 8px; color: var(--navy); text-decoration: none; font-size: 0.875rem; font-weight: 400; padding: 13px 28px; border: 1px solid var(--border); border-radius: 4px; transition: border-color var(--transition), color var(--transition), box-shadow var(--transition); }
 .btn-ghost:hover { border-color: var(--blue); color: var(--blue); box-shadow: var(--shadow-sm); }
 .btn-ghost::after { content: '→'; transition: transform var(--transition); }
