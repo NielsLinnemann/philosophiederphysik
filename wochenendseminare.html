@@ -50,9 +50,18 @@
 .seminar-arrow { margin-left: auto; color: var(--blue); font-size: 1rem; }
 @media (max-width: 900px) {
   .seminare-grid { grid-template-columns: 1fr; }
-  .seminar-entry { grid-template-columns: 100px 1fr; }
+  .seminar-entry { grid-template-columns: 100px minmax(0, 1fr); }
   .seminar-poster { width: 100px; height: auto; }
   .seminar-poster-placeholder { width: 120px; }
+  .seminar-content { min-width: 0; padding: 22px 24px; }
+  .seminar-entry-title { font-size: 1.35rem; overflow-wrap: anywhere; }
+}
+@media (max-width: 560px) {
+  .seminar-entry { grid-template-columns: 86px minmax(0, 1fr); }
+  .seminar-poster { width: 86px; }
+  .seminar-content { padding: 18px; }
+  .seminar-entry-title { font-size: 1.18rem; }
+  .seminar-entry-sub { font-size: 0.8rem; }
 }
 </style>
 </head>
@@ -112,7 +121,7 @@
       </a>
 
       <a href="seminar-2025-erlangen.html" class="seminar-entry">
-        <img class="seminar-poster" src="images/wochenendseminare/poster-2025-small.png" alt="Poster 2025 GWP Erlangen">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2025-small.PNG" alt="Poster 2025 GWP Erlangen">
         <div class="seminar-content">
           <div class="seminar-num">7. Seminar (GWP-Satellit)</div>
           <div class="seminar-entry-title">Allgemeine Wissenschaftsphilosophie</div>
@@ -182,7 +191,7 @@
       </a>
 
       <a href="seminar-2020-bremen.html" class="seminar-entry">
-        <img class="seminar-poster" src="images/wochenendseminare/poster-2020-small.png" alt="Poster 2020 Bremen">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2020-small.PNG" alt="Poster 2020 Bremen">
         <div class="seminar-content">
           <div class="seminar-num">2. Seminar</div>
           <div class="seminar-entry-title">Philosophie der Quantenmechanik</div>
@@ -196,7 +205,7 @@
       </a>
 
       <a href="seminar-2018-bonn.html" class="seminar-entry">
-        <img class="seminar-poster" src="images/wochenendseminare/poster-2018-small.png" alt="Poster 2018 Bonn">
+        <img class="seminar-poster" src="images/wochenendseminare/poster-2018-small.PNG" alt="Poster 2018 Bonn">
         <div class="seminar-content">
           <div class="seminar-num">1. Seminar</div>
           <div class="seminar-entry-title">Philosophie der Raumzeit</div>
@@ -246,5 +255,6 @@
   </div>
 </footer>
 
+<script src="nav.js"></script>
 </body>
 </html>
