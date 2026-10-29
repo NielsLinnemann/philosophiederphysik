@@ -61,6 +61,21 @@
 }
 .lecture-card:hover { box-shadow: 0 8px 28px rgba(15,39,68,0.08); }
 .lecture-card.upcoming { border-color: var(--blue); }
+.lecture-card.today {
+  background: #fff8d6;
+  border: 2px solid #e4b72f;
+  box-shadow: 0 4px 18px rgba(180, 135, 15, 0.12);
+}
+.lecture-card.today .upcoming-pill {
+  background: #f7d969;
+  color: #594300;
+}
+.lecture-card.today .zoom-link {
+  background: var(--blue);
+  color: #fff;
+  border-bottom: none;
+}
+.lecture-card.today .zoom-link:hover { background: var(--navy); }
 .lecture-header {
   padding: 28px 32px;
   display: grid;
@@ -323,15 +338,18 @@
       <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:24px; de-only">Organisiert von Karla Weingarten (Nijmegen), Oxana Shaya (Hannover), Maren Bräutigam (Köln), Annica Vieser (Genf), Niels Linnemann (Genf) und Kian Salimkhani (Nijmegen).</p>
 
       <!-- 19 -->
-      <div class="lecture-card upcoming" id="lec19">
+      <div class="lecture-card upcoming today" id="lec19">
         <div class="lecture-header" onclick="toggleLecture('lec19')">
           <div class="lecture-num-big">18</div>
           <div class="lecture-meta">
             <div class="lecture-speaker">Katherine Brading</div>
             <div class="lecture-affil">Duke University</div>
             <div class="lecture-title-main">Du Châtelet on Scientific Knowledge</div>
-            <span class="upcoming-pill de-only">Demnächst</span>
-            <span class="upcoming-pill en-only">Upcoming</span>
+            <span class="upcoming-pill de-only">HEUTE</span>
+            <span class="upcoming-pill en-only">TODAY</span>
+            <div>
+            <a href="https://unige.zoom.us/j/68789513250?pwd=6LIRtTFo2r9VaP6KtwQK8C7RVNIHTO.1" class="zoom-link" onclick="event.stopPropagation()" target="_blank" rel="noopener noreferrer"><span class="de-only">Per Zoom teilnehmen</span><span class="en-only">Join via Zoom</span></a>
+            </div>
           </div>
           <div class="lecture-date-col">
             <div class="lecture-date-str">29. Oktober 2026</div>
@@ -343,7 +361,6 @@
           <div class="lecture-body">
             <h4>Abstract</h4>
             <p>What is the best method for doing physics, and what is the epistemic status of the resulting theoretical claims? This question was pressing in the early 18th century, and the resulting transformation in our conception of scientific knowledge has lasting consequences today. I will describe the state of the debate as of the early 18th century and present Du Châtelet’s role in the transformation. We will look at her famous chapter on hypotheses in her book, Foundations of Physics, and we will see how she aligned her method for doing physics with the epistemic status of the resulting knowledge claims. The upshot is a highly-developed account of “uncertain knowledge,” a familiar (if difficult) idea in science today, but an oxymoron at the time.</p>
-            <a href="https://unige.zoom.us/j/68789513250?pwd=6LIRtTFo2r9VaP6KtwQK8C7RVNIHTO.1" class="zoom-link" target="_blank" rel="noopener noreferrer"><span class="de-only">Per Zoom teilnehmen</span><span class="en-only">Join via Zoom</span></a>
           </div>
         </div>
       </div>
