@@ -61,7 +61,7 @@
 }
 .lecture-card:hover { box-shadow: 0 8px 28px rgba(15,39,68,0.08); }
 .lecture-card.upcoming { border-color: var(--blue); }
-.lecture-card.today {
+.lecture-card.today, .lecture-card.upcoming-highlight {
   background: #fff8d6;
   border: 2px solid #e4b72f;
   box-shadow: 0 4px 18px rgba(180, 135, 15, 0.12);
@@ -336,6 +336,28 @@
     <div class="year-block">
       <div class="year-heading">2026</div>
       <p style="font-size:0.82rem; color:var(--text-light); margin-bottom:24px; de-only">Organisiert von Karla Weingarten (Nijmegen), Oxana Shaya (Hannover), Maren Bräutigam (Köln), Annica Vieser (Genf), Niels Linnemann (Genf) und Kian Salimkhani (Nijmegen).</p>
+
+      <!-- 20 -->
+      <div class="lecture-card upcoming upcoming-highlight" id="lec20">
+        <div class="lecture-header" onclick="toggleLecture('lec20')">
+          <div class="lecture-num-big">20</div>
+          <div class="lecture-meta">
+            <div class="lecture-speaker">Doreen Fraser</div>
+            <div class="lecture-title-main">No superluminal physical influence in QFT with a local measurement theory</div>
+          </div>
+          <div class="lecture-date-col">
+            <div class="lecture-date-str">10. Dezember 2026</div>
+            <div class="lecture-time-str">16:00 CET</div>
+            <div class="expand-arrow">↓</div>
+          </div>
+        </div>
+        <div class="lecture-expand" id="lec20-body">
+          <div class="lecture-body">
+            <h4>Abstract</h4>
+            <p>In Non-Relativistic Quantum Mechanics (NRQM) with Quantum Measurement Theory, selective measurement operations appear to have superluminal effects. Since non-relativistic theories do not prohibit superluminal causal influence, a natural response is to shift the analysis to QFT. A well-known obstacle to this strategy is the Reeh-Schlieder theorem for QFT, which appears to show that “by acting on the vacuum with suitable operations in a terrestrial laboratory, an experimenter can create the Taj Mahal on (or even behind) the Moon!” (Verch 2006). However, the standard analysis of the Reeh-Schlieder theorem relies on Quantum Measurement Theory for NRQM. We argue that, when a local measurement theory for QFT is applied instead, the Reeh-Schlieder theorem does not imply that superluminal physical influence is possible. Moreover, this is a consequence of relativistic physics that does not rely on a particular interpretation of quantum theory. This talk will be based on joint work with Maria Papageorgiou (IQOQI Vienna).</p>
+          </div>
+        </div>
+      </div>
 
       <!-- 19 -->
       <div class="lecture-card" id="lec19">
